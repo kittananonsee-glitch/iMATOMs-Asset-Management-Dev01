@@ -1,0 +1,1903 @@
+<!doctype html>
+<html lang="th" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iMATOMs - Asset Management System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&amp;family=Sarabun:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+        body { box-sizing: border-box; }
+        
+        :root {
+            --bg-primary: #0a0e17;
+            --bg-secondary: #111827;
+            --bg-card: rgba(17,24,39,0.95);
+            --accent-cyan: #00f5ff;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-orange: #f59e0b;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255,255,255,0.6);
+            --border-color: rgba(0,245,255,0.2);
+        }
+        
+        .light-mode {
+            --bg-primary: #e8ecf0;
+            --bg-secondary: #f5f7fa;
+            --bg-card: rgba(255,255,255,0.95);
+            --accent-cyan: #0891b2;
+            --accent-purple: #7c3aed;
+            --text-primary: #1e293b;
+            --text-secondary: rgba(30,41,59,0.7);
+            --border-color: rgba(8,145,178,0.25);
+        }
+        
+        * { font-family: 'Sarabun', sans-serif; }
+        .font-display { font-family: 'Orbitron', monospace; }
+        
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+        
+        body:not(.light-mode) {
+            background: linear-gradient(180deg, #0a0e17 0%, #0f1629 50%, #0a0e17 100%);
+        }
+        
+        body.light-mode {
+            background: linear-gradient(180deg, #e8ecf0 0%, #f0f4f8 50%, #e8ecf0 100%);
+        }
+        
+        .cyber-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .cyber-card:hover {
+            border-color: rgba(0,245,255,0.4);
+            box-shadow: 0 0 30px rgba(0,245,255,0.1);
+        }
+        
+        .cyber-btn {
+            background: linear-gradient(135deg, rgba(0,245,255,0.2) 0%, rgba(168,85,247,0.2) 100%);
+            border: 1px solid rgba(0,245,255,0.4);
+            color: var(--accent-cyan);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .cyber-btn:hover {
+            background: linear-gradient(135deg, rgba(0,245,255,0.3) 0%, rgba(168,85,247,0.3) 100%);
+            box-shadow: 0 0 20px rgba(0,245,255,0.3);
+            transform: translateY(-2px);
+        }
+        
+        .cyber-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .cyber-btn-success {
+            background: linear-gradient(135deg, rgba(16,185,129,0.2) 0%, rgba(16,185,129,0.1) 100%);
+            border-color: rgba(16,185,129,0.4);
+            color: var(--accent-green);
+        }
+        
+        .cyber-btn-danger {
+            background: linear-gradient(135deg, rgba(239,68,68,0.2) 0%, rgba(239,68,68,0.1) 100%);
+            border-color: rgba(239,68,68,0.4);
+            color: #ef4444;
+        }
+        
+        .cyber-btn-orange {
+            background: linear-gradient(135deg, rgba(245,158,11,0.2) 0%, rgba(245,158,11,0.1) 100%);
+            border-color: rgba(245,158,11,0.4);
+            color: var(--accent-orange);
+        }
+        
+        .cyber-input {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .light-mode .cyber-input { background: rgba(255,255,255,0.8); }
+        
+        .cyber-input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(0,245,255,0.2);
+        }
+        
+        .nav-item {
+            padding: 12px 20px;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .nav-item:hover {
+            color: var(--accent-cyan);
+            background: rgba(0,245,255,0.1);
+        }
+        
+        .nav-item.active {
+            color: var(--accent-cyan);
+            background: rgba(0,245,255,0.15);
+            border: 1px solid var(--border-color);
+        }
+        
+        .tab-cyber {
+            padding: 10px 20px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .tab-cyber:hover, .tab-cyber.active {
+            background: rgba(0,245,255,0.15);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, rgba(0,245,255,0.1) 0%, rgba(168,85,247,0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        
+        .data-table th {
+            background: rgba(0,245,255,0.1);
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .data-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: var(--text-primary);
+        }
+        
+        .data-table tr:hover td {
+            background: rgba(0,245,255,0.05);
+        }
+        
+        .qr-container {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+        
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .badge-active {
+            background: rgba(16,185,129,0.2);
+            color: #10b981;
+            border: 1px solid rgba(16,185,129,0.3);
+        }
+        
+        .badge-inactive {
+            background: rgba(239,68,68,0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239,68,68,0.3);
+        }
+        
+        .badge-pending {
+            background: rgba(245,158,11,0.2);
+            color: #f59e0b;
+            border: 1px solid rgba(245,158,11,0.3);
+        }
+        
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
+        ::-webkit-scrollbar-thumb { background: rgba(0,245,255,0.3); border-radius: 3px; }
+        
+        .page { display: none; opacity: 0; transition: opacity 0.3s ease; }
+        .page.active { display: block; opacity: 1; }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(0,245,255,0.2);
+            border-top-color: var(--accent-cyan);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .float { animation: float 3s ease-in-out infinite; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .sidebar-toggle-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border-color);
+            color: var(--accent-cyan);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-toggle-btn:hover {
+            background: rgba(0,245,255,0.15);
+            transform: scale(1.05);
+        }
+        
+        .datetime-display {
+            text-align: center;
+            padding: 12px;
+            border-radius: 10px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border-color);
+        }
+        
+        .datetime-display .time {
+            font-family: 'Orbitron', monospace;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent-cyan);
+        }
+        
+        .datetime-display .date {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box input {
+            padding-left: 48px;
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+        
+        .file-drop-zone {
+            border: 2px dashed var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .file-drop-zone:hover, .file-drop-zone.dragover {
+            border-color: var(--accent-cyan);
+            background: rgba(0,245,255,0.05);
+        }
+        
+        .asset-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .asset-card:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,245,255,0.1);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 280px;
+        }
+        
+        .scan-area {
+            border: 3px dashed var(--accent-cyan);
+            border-radius: 16px;
+            padding: 60px;
+            text-align: center;
+            background: rgba(0,245,255,0.05);
+        }
+        
+        .record-form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+        
+        @media (max-width: 768px) {
+            .record-form { grid-template-columns: 1fr; }
+        }
+        
+        .signature-pad {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: white;
+            cursor: crosshair;
+        }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="h-full">
+  <div class="flex h-full overflow-hidden"><!-- Sidebar -->
+   <nav class="w-72 border-r flex flex-col p-4 shrink-0 overflow-y-auto" style="background: rgba(0,0,0,0.4); border-color: var(--border-color);"><!-- Logo -->
+    <div class="mb-6 p-4">
+     <div class="flex items-center justify-between mb-3">
+      <div>
+       <h1 class="font-display text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-cyan-400">RELIABILITY</h1>
+       <p class="text-xs mt-1" style="color: var(--text-secondary);">Asset Management</p>
+      </div>
+      <div class="flex gap-2"><button class="sidebar-toggle-btn" onclick="toggleLanguage()" title="Switch Language"> <span id="lang-indicator" class="font-bold text-sm">TH</span> </button> <button class="sidebar-toggle-btn" onclick="toggleTheme()" title="Toggle Theme"> <i class="fa-solid fa-sun" id="theme-icon"></i> </button>
+      </div>
+     </div>
+    </div><!-- Navigation -->
+    <div class="flex-1 space-y-1">
+     <div class="text-xs uppercase tracking-wider px-4 py-2" style="color: var(--text-secondary);">
+      Main Menu
+     </div>
+     <div class="nav-item active" onclick="showPage('dashboard')" data-page="dashboard"><i class="fa-solid fa-chart-pie w-5"></i> <span>Dashboard</span>
+     </div>
+     <div class="nav-item" onclick="showPage('assets')" data-page="assets"><i class="fa-solid fa-cube w-5"></i> <span>Asset Database</span>
+     </div>
+     <div class="nav-item" onclick="showPage('record')" data-page="record"><i class="fa-solid fa-clipboard-check w-5"></i> <span>Annual Record</span>
+     </div>
+     <div class="nav-item" onclick="showPage('qrcode')" data-page="qrcode"><i class="fa-solid fa-qrcode w-5"></i> <span>QR Code Generator</span>
+     </div>
+     <div class="nav-item" onclick="showPage('search')" data-page="search"><i class="fa-solid fa-search w-5"></i> <span>Search Assets</span>
+     </div>
+     <div class="nav-item" onclick="showPage('import')" data-page="import"><i class="fa-solid fa-file-import w-5"></i> <span>Import/Export</span>
+     </div>
+     <div class="mt-4 pt-4 border-t" style="border-color: var(--border-color);">
+      <div class="text-xs uppercase tracking-wider px-4 py-2" style="color: var(--text-secondary);">
+       Navigation
+      </div><a href="#" onclick="goBack()" class="nav-item"> <i class="fa-solid fa-arrow-left w-5"></i> <span>Back to iMATOMs</span> </a>
+     </div>
+    </div><!-- DateTime -->
+    <div class="pt-4 border-t" style="border-color: var(--border-color);">
+     <div class="datetime-display">
+      <div class="time" id="current-time">
+       00:00:00
+      </div>
+      <div class="date" id="current-date">
+       Loading...
+      </div>
+     </div>
+    </div>
+   </nav><!-- Main Content -->
+   <main class="flex-1 overflow-auto p-6"><!-- DASHBOARD PAGE -->
+    <section id="page-dashboard" class="page active">
+     <header class="mb-6">
+      <h2 class="font-display text-3xl font-bold mb-2" style="color: var(--text-primary);">📊 ASSET DASHBOARD</h2>
+      <p style="color: var(--text-secondary);">ภาพรวมทรัพย์สินและมูลค่ารวม</p>
+     </header><!-- Stats Cards -->
+     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div class="stat-card">
+       <div class="flex items-center justify-between mb-3">
+        <div class="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center"><i class="fa-solid fa-cubes text-2xl" style="color: var(--accent-cyan);"></i>
+        </div><span class="badge badge-active">Active</span>
+       </div>
+       <div class="text-3xl font-display font-bold" id="stat-total-assets" style="color: var(--accent-cyan);">
+        0
+       </div>
+       <div class="text-sm" style="color: var(--text-secondary);">
+        Total Assets
+       </div>
+      </div>
+      <div class="stat-card">
+       <div class="flex items-center justify-between mb-3">
+        <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center"><i class="fa-solid fa-coins text-2xl text-green-400"></i>
+        </div>
+       </div>
+       <div class="text-3xl font-display font-bold text-green-400" id="stat-total-value">
+        ฿0
+       </div>
+       <div class="text-sm" style="color: var(--text-secondary);">
+        Total Value
+       </div>
+      </div>
+      <div class="stat-card">
+       <div class="flex items-center justify-between mb-3">
+        <div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center"><i class="fa-solid fa-building text-2xl text-purple-400"></i>
+        </div>
+       </div>
+       <div class="text-3xl font-display font-bold text-purple-400" id="stat-buildings">
+        0
+       </div>
+       <div class="text-sm" style="color: var(--text-secondary);">
+        Buildings
+       </div>
+      </div>
+      <div class="stat-card">
+       <div class="flex items-center justify-between mb-3">
+        <div class="w-12 h-12 rounded-xl bg-orange-500/20 flex items-center justify-center"><i class="fa-solid fa-clipboard-check text-2xl text-orange-400"></i>
+        </div>
+       </div>
+       <div class="text-3xl font-display font-bold text-orange-400" id="stat-records">
+        0
+       </div>
+       <div class="text-sm" style="color: var(--text-secondary);">
+        Annual Records
+       </div>
+      </div>
+     </div><!-- Charts -->
+     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div class="cyber-card p-6">
+       <h3 class="font-display text-lg mb-4" style="color: var(--text-primary);"><i class="fa-solid fa-chart-pie mr-2" style="color: var(--accent-cyan);"></i> Assets by Class</h3>
+       <div class="chart-container">
+        <canvas id="chart-by-class"></canvas>
+       </div>
+      </div>
+      <div class="cyber-card p-6">
+       <h3 class="font-display text-lg mb-4" style="color: var(--text-primary);"><i class="fa-solid fa-building mr-2" style="color: var(--accent-cyan);"></i> Assets by Building</h3>
+       <div class="chart-container">
+        <canvas id="chart-by-building"></canvas>
+       </div>
+      </div>
+     </div><!-- Value by Class -->
+     <div class="cyber-card p-6">
+      <h3 class="font-display text-lg mb-4" style="color: var(--text-primary);"><i class="fa-solid fa-chart-bar mr-2" style="color: var(--accent-cyan);"></i> Value by Asset Class</h3>
+      <div class="chart-container" style="height: 320px;">
+       <canvas id="chart-value-class"></canvas>
+      </div>
+     </div>
+    </section><!-- ASSETS PAGE -->
+    <section id="page-assets" class="page">
+     <header class="flex items-center justify-between flex-wrap gap-4 mb-6">
+      <div>
+       <h2 class="font-display text-3xl font-bold mb-2" style="color: var(--text-primary);">📦 ASSET DATABASE</h2>
+       <p style="color: var(--text-secondary);">ฐานข้อมูลทรัพย์สินทั้งหมด</p>
+      </div>
+      <div class="flex gap-3 flex-wrap"><button onclick="showAddAssetModal()" class="cyber-btn"> <i class="fa-solid fa-plus"></i> Add Asset </button>
+      </div>
+     </header><!-- Filters -->
+     <div class="flex gap-3 mb-4 flex-wrap">
+      <div class="search-box flex-1 min-w-[200px]"><i class="fa-solid fa-search"></i> <input type="text" id="asset-search" class="cyber-input" placeholder="Search assets..." oninput="filterAssets()">
+      </div><select id="filter-building" class="cyber-input w-auto" onchange="filterAssets()"> <option value="">All Buildings</option> <option value="TH50">TH50 - ViMUT</option> <option value="TH51">TH51 - ViMUT Phahonyothin</option> </select> <select id="filter-class" class="cyber-input w-auto" onchange="filterAssets()"> <option value="">All Classes</option> <option value="101">101 - Land</option> <option value="501">501 - Building</option> <option value="502">502 - Equipment</option> <option value="706">706 - Lease</option> <option value="AUC">AUC - Project</option> </select>
+     </div><!-- Assets Table -->
+     <div class="cyber-card overflow-hidden">
+      <div class="overflow-x-auto" style="max-height: 600px;">
+       <table class="data-table">
+        <thead>
+         <tr>
+          <th>Asset No.</th>
+          <th>Description</th>
+          <th>Class</th>
+          <th>Company</th>
+          <th>Cost Center</th>
+          <th>Capitalized</th>
+          <th>Useful Life</th>
+          <th>Actions</th>
+         </tr>
+        </thead>
+        <tbody id="assets-table-body">
+         <tr>
+          <td colspan="8" class="text-center py-12">
+           <div class="loading-spinner mx-auto mb-4"></div><p style="color: var(--text-secondary);">Loading assets...</p></td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </div>
+     <div class="mt-4 flex items-center justify-between">
+      <p id="assets-count" style="color: var(--text-secondary);">0 assets</p>
+     </div>
+    </section><!-- ANNUAL RECORD PAGE -->
+    <section id="page-record" class="page">
+     <header class="mb-6">
+      <h2 class="font-display text-3xl font-bold mb-2" style="color: var(--text-primary);">📋 ANNUAL ASSET RECORD</h2>
+      <p style="color: var(--text-secondary);">บันทึกตรวจสอบทรัพย์สินประจำปี</p>
+     </header><!-- Scan Section -->
+     <div class="cyber-card p-6 mb-6">
+      <h3 class="font-display text-lg mb-4" style="color: var(--text-primary);"><i class="fa-solid fa-qrcode mr-2" style="color: var(--accent-cyan);"></i> Scan Asset QR Code</h3>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+       <div>
+        <div class="scan-area mb-4" id="scan-area">
+         <div class="w-20 h-20 mx-auto mb-4 rounded-2xl bg-cyan-500/20 flex items-center justify-center float"><i class="fa-solid fa-camera text-4xl" style="color: var(--accent-cyan);"></i>
+         </div>
+         <h4 class="text-xl font-bold mb-2" style="color: var(--text-primary);">Scan QR Code</h4>
+         <p class="mb-4" style="color: var(--text-secondary);">หรือกรอก Asset No. ด้านล่าง</p>
+         <div class="flex gap-3 justify-center"><input type="text" id="manual-asset-no" class="cyber-input max-w-xs" placeholder="Enter Asset No. (e.g. TH51|5020000823|0000...)"> <button onclick="lookupAsset()" class="cyber-btn"> <i class="fa-solid fa-search"></i> Lookup </button>
+         </div>
+        </div>
+       </div><!-- Asset Info Display -->
+       <div id="scanned-asset-info" class="hidden">
+        <div class="cyber-card p-5 border-2" style="border-color: var(--accent-green);">
+         <div class="flex items-center gap-3 mb-4">
+          <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center"><i class="fa-solid fa-check-circle text-2xl text-green-400"></i>
+          </div>
+          <div>
+           <h4 class="font-bold text-lg" style="color: var(--text-primary);">Asset Found!</h4>
+           <p id="scanned-asset-no" style="color: var(--accent-cyan);"></p>
+          </div>
+         </div>
+         <div class="space-y-2 text-sm">
+          <p><span style="color: var(--text-secondary);">Description:</span> <span id="scanned-desc" style="color: var(--text-primary);"></span></p>
+          <p><span style="color: var(--text-secondary);">Company:</span> <span id="scanned-company" style="color: var(--text-primary);"></span></p>
+          <p><span style="color: var(--text-secondary);">Cost Center:</span> <span id="scanned-cost-center" style="color: var(--text-primary);"></span></p>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Record Form -->
+     <div class="cyber-card p-6" id="record-form-section">
+      <h3 class="font-display text-lg mb-4" style="color: var(--text-primary);"><i class="fa-solid fa-edit mr-2" style="color: var(--accent-cyan);"></i> Record Details</h3>
+      <form id="record-form" class="record-form">
+       <div><label for="rec-building" class="block text-sm mb-2" style="color: var(--text-secondary);">Building</label> <select id="rec-building" class="cyber-input"> <option value="ViMUT Phahonyothin Hospital">ViMUT Phahonyothin Hospital</option> <option value="ViMUT Hospital">ViMUT Hospital</option> <option value="Theptarin Hospital">Theptarin Hospital</option> </select>
+       </div>
+       <div><label for="rec-main-area" class="block text-sm mb-2" style="color: var(--text-secondary);">Main Area Ref</label> <input type="text" id="rec-main-area" class="cyber-input" placeholder="e.g. ฝ่ายวิศวกรรมอาคาร">
+       </div>
+       <div><label for="rec-room-name" class="block text-sm mb-2" style="color: var(--text-secondary);">Room Name</label> <input type="text" id="rec-room-name" class="cyber-input" placeholder="ชื่อห้อง">
+       </div>
+       <div><label for="rec-type-area" class="block text-sm mb-2" style="color: var(--text-secondary);">Type Area</label> <select id="rec-type-area" class="cyber-input"> <option value="General Support">General Support</option> <option value="Common Area">Common Area</option> <option value="Toilet">Toilet</option> <option value="Office">Office</option> <option value="Technical">Technical</option> </select>
+       </div>
+       <div><label for="rec-floor" class="block text-sm mb-2" style="color: var(--text-secondary);">Floor</label> <input type="text" id="rec-floor" class="cyber-input" placeholder="e.g. 1M, 2, 3">
+       </div>
+       <div><label for="rec-amount" class="block text-sm mb-2" style="color: var(--text-secondary);">Amount (Set)</label> <input type="number" id="rec-amount" class="cyber-input" value="1" min="1">
+       </div>
+       <div><label for="rec-user-name" class="block text-sm mb-2" style="color: var(--text-secondary);">User Name</label> <input type="text" id="rec-user-name" class="cyber-input" placeholder="ชื่อผู้ใช้งาน">
+       </div>
+       <div><label for="rec-staff-name" class="block text-sm mb-2" style="color: var(--text-secondary);">Staff Record Name</label> <input type="text" id="rec-staff-name" class="cyber-input" placeholder="ชื่อผู้บันทึก">
+       </div>
+       <div><label for="rec-tel" class="block text-sm mb-2" style="color: var(--text-secondary);">Tel No.</label> <input type="tel" id="rec-tel" class="cyber-input" placeholder="0XX-XXX-XXXX">
+       </div>
+       <div><label for="rec-detail" class="block text-sm mb-2" style="color: var(--text-secondary);">Additional Detail</label> <input type="text" id="rec-detail" class="cyber-input" placeholder="รายละเอียดเพิ่มเติม">
+       </div>
+       <div class="col-span-full"><label class="block text-sm mb-2" style="color: var(--text-secondary);">Signature</label>
+        <canvas id="signature-pad" class="signature-pad w-full" height="120"></canvas>
+        <div class="flex gap-3 mt-2"><button type="button" onclick="clearSignature()" class="cyber-btn cyber-btn-danger text-sm"> <i class="fa-solid fa-eraser"></i> Clear </button>
+        </div>
+       </div>
+       <div class="col-span-full flex gap-3 mt-4"><button type="submit" id="submit-record-btn" class="cyber-btn cyber-btn-success flex-1 py-3"> <i class="fa-solid fa-save"></i> Save Record </button> <button type="button" onclick="clearRecordForm()" class="cyber-btn cyber-btn-danger"> <i class="fa-solid fa-times"></i> Cancel </button>
+       </div>
+      </form>
+     </div><!-- Recent Records -->
+     <div class="cyber-card p-6 mt-6">
+      <h3 class="font-display text-lg mb-4" style="color: var(--text-primary);"><i class="fa-solid fa-history mr-2" style="color: var(--accent-cyan);"></i> Recent Records</h3>
+      <div class="overflow-x-auto">
+       <table class="data-table">
+        <thead>
+         <tr>
+          <th>Date</th>
+          <th>Asset No.</th>
+          <th>Building</th>
+          <th>Room</th>
+          <th>Staff</th>
+          <th>Status</th>
+         </tr>
+        </thead>
+        <tbody id="records-table-body">
+         <tr>
+          <td colspan="6" class="text-center py-8" style="color: var(--text-secondary);">No records yet</td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </div>
+    </section><!-- QR CODE PAGE -->
+    <section id="page-qrcode" class="page">
+     <header class="mb-6">
+      <h2 class="font-display text-3xl font-bold mb-2" style="color: var(--text-primary);">🏷️ QR CODE GENERATOR</h2>
+      <p style="color: var(--text-secondary);">สร้าง QR Code สำหรับติดทรัพย์สิน</p>
+     </header>
+     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6"><!-- Generator -->
+      <div class="cyber-card p-6">
+       <h3 class="font-display text-lg mb-4" style="color: var(--text-primary);"><i class="fa-solid fa-wand-magic-sparkles mr-2" style="color: var(--accent-cyan);"></i> Generate QR Code</h3>
+       <div class="space-y-4">
+        <div><label for="qr-asset-select" class="block text-sm mb-2" style="color: var(--text-secondary);">Select Asset</label> <select id="qr-asset-select" class="cyber-input" onchange="generateQR()"> <option value="">-- Select Asset --</option> </select>
+        </div>
+        <div><label for="qr-custom" class="block text-sm mb-2" style="color: var(--text-secondary);">Or Enter Custom Code Ref</label>
+         <div class="flex gap-3"><input type="text" id="qr-custom" class="cyber-input" placeholder="e.g. TH51|5020000823|0000||51102009||502||"> <button onclick="generateCustomQR()" class="cyber-btn"> <i class="fa-solid fa-qrcode"></i> Generate </button>
+         </div>
+        </div>
+       </div>
+      </div><!-- Preview -->
+      <div class="cyber-card p-6 text-center">
+       <h3 class="font-display text-lg mb-4" style="color: var(--text-primary);"><i class="fa-solid fa-eye mr-2" style="color: var(--accent-cyan);"></i> QR Code Preview</h3>
+       <div id="qr-preview" class="mb-4">
+        <div class="qr-container inline-block">
+         <canvas id="qr-canvas"></canvas>
+        </div>
+       </div>
+       <p id="qr-code-text" class="text-sm mb-4 break-all" style="color: var(--text-secondary);">No QR code generated</p>
+       <div class="flex gap-3 justify-center"><button onclick="downloadQR()" class="cyber-btn cyber-btn-success" id="download-qr-btn" disabled> <i class="fa-solid fa-download"></i> Download PNG </button> <button onclick="printQR()" class="cyber-btn" id="print-qr-btn" disabled> <i class="fa-solid fa-print"></i> Print </button>
+       </div>
+      </div>
+     </div><!-- Batch Generate -->
+     <div class="cyber-card p-6 mt-6">
+      <h3 class="font-display text-lg mb-4" style="color: var(--text-primary);"><i class="fa-solid fa-layer-group mr-2" style="color: var(--accent-cyan);"></i> Batch Generate QR Codes</h3>
+      <p class="mb-4" style="color: var(--text-secondary);">Generate QR codes for multiple assets at once</p>
+      <div class="flex gap-3 flex-wrap"><button onclick="generateAllQR()" class="cyber-btn"> <i class="fa-solid fa-magic"></i> Generate All </button> <button onclick="downloadAllQR()" class="cyber-btn cyber-btn-success" id="download-all-btn" disabled> <i class="fa-solid fa-file-zipper"></i> Download All (ZIP) </button>
+      </div>
+      <div id="batch-qr-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-6"></div>
+     </div>
+    </section><!-- SEARCH PAGE -->
+    <section id="page-search" class="page">
+     <header class="mb-6">
+      <h2 class="font-display text-3xl font-bold mb-2" style="color: var(--text-primary);">🔍 SEARCH ASSETS</h2>
+      <p style="color: var(--text-secondary);">ค้นหาทรัพย์สินตามชื่อหรือรหัส</p>
+     </header>
+     <div class="cyber-card p-6 mb-6">
+      <div class="search-box max-w-2xl mx-auto"><i class="fa-solid fa-search text-xl"></i> <input type="text" id="global-search" class="cyber-input text-lg py-4 pl-14" placeholder="ค้นหาด้วย Asset No., Description, Cost Center..." oninput="performSearch()">
+      </div>
+     </div>
+     <div id="search-results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div class="col-span-full text-center py-12">
+       <div class="w-24 h-24 mx-auto rounded-full bg-cyan-500/10 flex items-center justify-center mb-4"><i class="fa-solid fa-search text-4xl" style="color: var(--accent-cyan);"></i>
+       </div>
+       <h3 class="text-xl mb-2" style="color: var(--text-primary);">Search for Assets</h3>
+       <p style="color: var(--text-secondary);">Enter keywords to search</p>
+      </div>
+     </div>
+    </section><!-- IMPORT/EXPORT PAGE -->
+    <section id="page-import" class="page">
+     <header class="mb-6">
+      <h2 class="font-display text-3xl font-bold mb-2" style="color: var(--text-primary);">📥 IMPORT / EXPORT</h2>
+      <p style="color: var(--text-secondary);">นำเข้าและส่งออกข้อมูลทรัพย์สิน</p>
+     </header>
+     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6"><!-- Import -->
+      <div class="cyber-card p-6">
+       <h3 class="font-display text-lg mb-4" style="color: var(--text-primary);"><i class="fa-solid fa-file-import mr-2" style="color: var(--accent-cyan);"></i> Import Data</h3>
+       <div class="file-drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-cyan-500/20 flex items-center justify-center"><i class="fa-solid fa-cloud-arrow-up text-3xl" style="color: var(--accent-cyan);"></i>
+        </div>
+        <h4 class="text-lg font-bold mb-2" style="color: var(--text-primary);">Drop Excel File Here</h4>
+        <p style="color: var(--text-secondary);">or click to browse</p>
+        <p class="text-sm mt-2" style="color: var(--text-secondary);">Supports: .xlsx, .xls</p><input type="file" id="file-input" accept=".xlsx,.xls" class="hidden" onchange="handleFileSelect(event)">
+       </div>
+       <div id="import-preview" class="mt-4 hidden">
+        <div class="p-4 rounded-lg border" style="background: rgba(0,245,255,0.1); border-color: var(--accent-cyan);">
+         <p class="font-semibold" style="color: var(--accent-cyan);"><i class="fa-solid fa-file-excel mr-2"></i><span id="file-name"></span></p>
+         <p class="text-sm mt-1" style="color: var(--text-secondary);"><span id="row-count">0</span> rows found</p>
+        </div><button onclick="importData()" id="import-btn" class="cyber-btn cyber-btn-success w-full mt-4 py-3"> <i class="fa-solid fa-upload"></i> Import Data </button>
+       </div>
+      </div><!-- Export -->
+      <div class="cyber-card p-6">
+       <h3 class="font-display text-lg mb-4" style="color: var(--text-primary);"><i class="fa-solid fa-file-export mr-2" style="color: var(--accent-cyan);"></i> Export Data</h3>
+       <div class="space-y-4">
+        <div class="p-4 rounded-lg border" style="background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.3);">
+         <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center"><i class="fa-solid fa-table text-xl text-green-400"></i>
+          </div>
+          <div>
+           <h4 class="font-bold" style="color: var(--text-primary);">Asset Database</h4>
+           <p class="text-sm" style="color: var(--text-secondary);">Export all assets to Excel</p>
+          </div>
+         </div><button onclick="exportAssets()" class="cyber-btn cyber-btn-success w-full mt-4"> <i class="fa-solid fa-download"></i> Export Assets (.xlsx) </button>
+        </div>
+        <div class="p-4 rounded-lg border" style="background: rgba(168,85,247,0.1); border-color: rgba(168,85,247,0.3);">
+         <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center"><i class="fa-solid fa-clipboard-list text-xl text-purple-400"></i>
+          </div>
+          <div>
+           <h4 class="font-bold" style="color: var(--text-primary);">Annual Records</h4>
+           <p class="text-sm" style="color: var(--text-secondary);">Export all records to Excel</p>
+          </div>
+         </div><button onclick="exportRecords()" class="cyber-btn w-full mt-4" style="border-color: rgba(168,85,247,0.4); color: #a855f7;"> <i class="fa-solid fa-download"></i> Export Records (.xlsx) </button>
+        </div>
+        <div class="p-4 rounded-lg border" style="background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.3);">
+         <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-orange-500/20 flex items-center justify-center"><i class="fa-solid fa-file-lines text-xl text-orange-400"></i>
+          </div>
+          <div>
+           <h4 class="font-bold" style="color: var(--text-primary);">Template</h4>
+           <p class="text-sm" style="color: var(--text-secondary);">Download import template</p>
+          </div>
+         </div><button onclick="downloadTemplate()" class="cyber-btn cyber-btn-orange w-full mt-4"> <i class="fa-solid fa-download"></i> Download Template </button>
+        </div>
+       </div>
+      </div>
+     </div>
+    </section>
+   </main>
+  </div><!-- Add/Edit Asset Modal -->
+  <div id="asset-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+   <div class="cyber-card p-6 w-full max-w-2xl max-h-[90%] overflow-auto">
+    <div class="flex items-center justify-between mb-6">
+     <h3 class="font-display text-xl" id="asset-modal-title" style="color: var(--text-primary);">Add New Asset</h3><button onclick="closeModal('asset-modal')" class="text-2xl" style="color: var(--text-secondary);">×</button>
+    </div>
+    <form id="asset-form" class="grid grid-cols-1 md:grid-cols-2 gap-4"><input type="hidden" id="asset-backend-id">
+     <div><label for="asset-class" class="block text-sm mb-2" style="color: var(--text-secondary);">Asset Class</label> <select id="asset-class" class="cyber-input" required> <option value="101">101 - Land</option> <option value="501">501 - Building</option> <option value="502">502 - Equipment</option> <option value="706">706 - Lease</option> <option value="AUC">AUC - Project</option> </select>
+     </div>
+     <div><label for="asset-company" class="block text-sm mb-2" style="color: var(--text-secondary);">Company Code</label> <select id="asset-company" class="cyber-input" required> <option value="TH50">TH50</option> <option value="TH51">TH51</option> </select>
+     </div>
+     <div><label for="asset-no" class="block text-sm mb-2" style="color: var(--text-secondary);">Asset No.</label> <input type="text" id="asset-no" class="cyber-input" placeholder="e.g. 5020000823" required>
+     </div>
+     <div><label for="asset-sub" class="block text-sm mb-2" style="color: var(--text-secondary);">Sub-number</label> <input type="text" id="asset-sub" class="cyber-input" value="0" placeholder="0">
+     </div>
+     <div class="md:col-span-2"><label for="asset-desc" class="block text-sm mb-2" style="color: var(--text-secondary);">Asset Description</label> <input type="text" id="asset-desc" class="cyber-input" placeholder="Enter asset description" required>
+     </div>
+     <div><label for="asset-capitalized" class="block text-sm mb-2" style="color: var(--text-secondary);">Capitalized On</label> <input type="date" id="asset-capitalized" class="cyber-input" required>
+     </div>
+     <div><label for="asset-life" class="block text-sm mb-2" style="color: var(--text-secondary);">Useful Life (Years)</label> <input type="number" id="asset-life" class="cyber-input" value="0" min="0">
+     </div>
+     <div><label for="asset-cost-center" class="block text-sm mb-2" style="color: var(--text-secondary);">Cost Center</label> <input type="text" id="asset-cost-center" class="cyber-input" placeholder="e.g. 51102009">
+     </div>
+     <div><label for="asset-cost-name" class="block text-sm mb-2" style="color: var(--text-secondary);">Cost Center Name</label> <input type="text" id="asset-cost-name" class="cyber-input" placeholder="e.g. VM-Management office">
+     </div>
+     <div><label for="asset-value" class="block text-sm mb-2" style="color: var(--text-secondary);">Asset Value (฿)</label> <input type="number" id="asset-value" class="cyber-input" value="0" min="0" step="0.01">
+     </div>
+     <div><label for="asset-status" class="block text-sm mb-2" style="color: var(--text-secondary);">Status</label> <select id="asset-status" class="cyber-input"> <option value="active">Active</option> <option value="inactive">Inactive</option> <option value="disposed">Disposed</option> </select>
+     </div>
+     <div class="md:col-span-2 flex gap-3 mt-4"><button type="submit" id="save-asset-btn" class="cyber-btn cyber-btn-success flex-1 py-3"> <i class="fa-solid fa-save"></i> Save Asset </button> <button type="button" onclick="closeModal('asset-modal')" class="cyber-btn cyber-btn-danger">Cancel</button>
+     </div>
+    </form>
+   </div>
+  </div><!-- Asset Detail Modal -->
+  <div id="detail-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+   <div class="cyber-card p-6 w-full max-w-2xl max-h-[90%] overflow-auto">
+    <div class="flex items-center justify-between mb-6">
+     <h3 class="font-display text-xl" style="color: var(--text-primary);">Asset Details</h3><button onclick="closeModal('detail-modal')" class="text-2xl" style="color: var(--text-secondary);">×</button>
+    </div>
+    <div id="detail-content" class="space-y-4"></div>
+    <div class="flex gap-3 mt-6"><button onclick="editCurrentAsset()" class="cyber-btn flex-1"> <i class="fa-solid fa-edit"></i> Edit </button> <button onclick="generateQRForCurrent()" class="cyber-btn cyber-btn-success flex-1"> <i class="fa-solid fa-qrcode"></i> Generate QR </button>
+    </div>
+   </div>
+  </div><!-- Toast -->
+  <div id="toast" class="fixed top-6 right-6 z-50 hidden">
+   <div class="cyber-card px-6 py-4 flex items-center gap-3"><i id="toast-icon" class="fa-solid fa-check-circle text-green-400 text-xl"></i> <span id="toast-message" style="color: var(--text-primary);"></span>
+   </div>
+  </div>
+  <script>
+    // ============================================
+    // CONFIGURATION & STATE
+    // ============================================
+    
+    const defaultConfig = { app_title: 'iMATOMs - Asset Management System' };
+    
+    let allData = [];
+    let currentAsset = null;
+    let pendingImportData = null;
+    let signatureCanvas, signatureCtx;
+    let isDrawing = false;
+    let isDarkMode = true;
+    let currentLang = 'th';
+    
+    const sampleAssets = [
+        { type: 'asset', asset_class: '706', company_code: 'TH50', asset_no: '7060000003', sub_number: '0', capitalized_on: '2025-04-05', cost_center_desc: 'VM-Management office', asset_description: 'เช่ารถ 2ขบ2088_สัญญาเช่าเลขที่ TCM2200007', useful_life: 1, cost_center: '50990101', cost_center_name: 'VM-Management office', code_ref: 'TH50|7060000003|0000||50990101||706||', status: 'active', asset_value: 0 },
+        { type: 'asset', asset_class: 'AUC', company_code: 'TH50', asset_no: '9010000001', sub_number: '0', capitalized_on: '2022-12-31', cost_center_desc: 'VM-Management office', asset_description: 'โครงการวิมุต 2 - ปิ่นเกล้า', useful_life: 0, cost_center: '50990101', cost_center_name: 'VM-Management office', code_ref: 'TH50|9010000001|0000||50990101||AUC||', status: 'active', asset_value: 50000000 },
+        { type: 'asset', asset_class: 'AUC', company_code: 'TH50', asset_no: '9010000002', sub_number: '0', capitalized_on: '2023-03-31', cost_center_desc: 'VM-Management office', asset_description: 'โครงการ ViMUT-สุขุมวิท', useful_life: 0, cost_center: '50990101', cost_center_name: 'VM-Management office', code_ref: 'TH50|9010000002|0000||50990101||AUC||', status: 'active', asset_value: 75000000 },
+        { type: 'asset', asset_class: 'AUC', company_code: 'TH50', asset_no: '9010000003', sub_number: '0', capitalized_on: '2023-09-30', cost_center_desc: 'VM-Management office', asset_description: 'Site ทองหล่อ', useful_life: 0, cost_center: '50990101', cost_center_name: 'VM-Management office', code_ref: 'TH50|9010000003|0000||50990101||AUC||', status: 'active', asset_value: 120000000 },
+        { type: 'asset', asset_class: '101', company_code: 'TH51', asset_no: '1010000001', sub_number: '0', capitalized_on: '2020-01-01', cost_center_desc: 'Common Cost Center', asset_description: 'ที่ดิน', useful_life: 100, cost_center: '51999999', cost_center_name: 'Common Cost Center', code_ref: 'TH51|1010000001|0000||51999999||101||', status: 'active', asset_value: 500000000 },
+        { type: 'asset', asset_class: '502', company_code: 'TH51', asset_no: '5020000823', sub_number: '0', capitalized_on: '2021-06-15', cost_center_desc: 'Engineering', asset_description: 'Chiller System', useful_life: 15, cost_center: '51102009', cost_center_name: 'ฝ่ายวิศวกรรมอาคาร', code_ref: 'TH51|5020000823|0000||51102009||502||', status: 'active', asset_value: 8500000 },
+        { type: 'asset', asset_class: '501', company_code: 'TH51', asset_no: '5010002398', sub_number: '0', capitalized_on: '2020-03-01', cost_center_desc: 'Common Area', asset_description: 'ห้องน้ำส่วนกลางชาย ชั้น 4', useful_life: 20, cost_center: '51101022', cost_center_name: 'Common Area', code_ref: 'TH51|5010002398|0000||51101022||501||', status: 'active', asset_value: 350000 }
+    ];
+    
+    // ============================================
+    // SDK INITIALIZATION
+    // ============================================
+    
+    const dataHandler = {
+        onDataChanged(data) {
+            allData = data;
+            renderAll();
+        }
+    };
+    
+    async function initApp() {
+        if (window.elementSdk) {
+            await window.elementSdk.init({
+                defaultConfig,
+                onConfigChange: async (config) => {
+                    document.title = config.app_title || defaultConfig.app_title;
+                },
+                mapToCapabilities: () => ({ recolorables: [], borderables: [], fontEditable: undefined, fontSizeable: undefined }),
+                mapToEditPanelValues: (config) => new Map([['app_title', config.app_title || defaultConfig.app_title]])
+            });
+        }
+        
+        if (window.dataSdk) {
+            await window.dataSdk.init(dataHandler);
+        }
+        
+        initSignaturePad();
+        initDragDrop();
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+        
+        if (localStorage.getItem('theme') === 'light') toggleTheme();
+        if (localStorage.getItem('lang') === 'en') toggleLanguage();
+        
+        // Load sample data if empty
+        if (getAssets().length === 0) {
+            renderAll();
+        }
+    }
+    
+    // ============================================
+    // DATA HELPERS
+    // ============================================
+    
+    function getAssets() {
+        const assets = allData.filter(d => d.type === 'asset');
+        return assets.length > 0 ? assets : sampleAssets;
+    }
+    
+    function getRecords() {
+        return allData.filter(d => d.type === 'record');
+    }
+    
+    // ============================================
+    // DATETIME
+    // ============================================
+    
+    function updateDateTime() {
+        const now = new Date();
+        const timeEl = document.getElementById('current-time');
+        const dateEl = document.getElementById('current-date');
+        
+        if (timeEl && dateEl) {
+            timeEl.textContent = now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const locale = currentLang === 'th' ? 'th-TH' : 'en-US';
+            dateEl.textContent = now.toLocaleDateString(locale, { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+        }
+    }
+    
+    // ============================================
+    // THEME & LANGUAGE
+    // ============================================
+    
+    function toggleTheme() {
+        isDarkMode = !isDarkMode;
+        document.documentElement.classList.toggle('light-mode', !isDarkMode);
+        document.body.classList.toggle('light-mode', !isDarkMode);
+        document.getElementById('theme-icon').className = isDarkMode ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+        renderCharts();
+    }
+    
+    function toggleLanguage() {
+        currentLang = currentLang === 'th' ? 'en' : 'th';
+        document.getElementById('lang-indicator').textContent = currentLang.toUpperCase();
+        localStorage.setItem('lang', currentLang);
+        updateDateTime();
+    }
+    
+    // ============================================
+    // NAVIGATION
+    // ============================================
+    
+    function showPage(pageId) {
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.toggle('active', item.dataset.page === pageId);
+        });
+        document.querySelectorAll('.page').forEach(page => {
+            page.classList.toggle('active', page.id === `page-${pageId}`);
+        });
+    }
+    
+    function goBack() {
+        showToast('Navigating back to iMATOMs...', 'https://kittanano-bot.github.io/iMATOMs-AI-Analytics-Pro-V2.0/');
+    }
+    
+    // ============================================
+    // RENDER ALL
+    // ============================================
+    
+    function renderAll() {
+        renderDashboard();
+        renderAssetsTable();
+        renderRecordsTable();
+        populateQRSelect();
+    }
+    
+    // ============================================
+    // DASHBOARD
+    // ============================================
+    
+    let chartByClass, chartByBuilding, chartValueClass;
+    
+    function renderDashboard() {
+        const assets = getAssets();
+        const records = getRecords();
+        
+        // Stats
+        document.getElementById('stat-total-assets').textContent = assets.length;
+        
+        const totalValue = assets.reduce((sum, a) => sum + (a.asset_value || 0), 0);
+        document.getElementById('stat-total-value').textContent = '฿' + totalValue.toLocaleString();
+        
+        const buildings = [...new Set(assets.map(a => a.company_code))];
+        document.getElementById('stat-buildings').textContent = buildings.length;
+        
+        document.getElementById('stat-records').textContent = records.length;
+        
+        renderCharts();
+    }
+    
+    function renderCharts() {
+        const assets = getAssets();
+        const textColor = isDarkMode ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)';
+        const gridColor = isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+        
+        // Assets by Class
+        const classCounts = {};
+        assets.forEach(a => {
+            classCounts[a.asset_class] = (classCounts[a.asset_class] || 0) + 1;
+        });
+        
+        const classLabels = Object.keys(classCounts);
+        const classData = Object.values(classCounts);
+        const classColors = ['#00f5ff', '#a855f7', '#10b981', '#f59e0b', '#ef4444', '#3b82f6'];
+        
+        if (chartByClass) chartByClass.destroy();
+        chartByClass = new Chart(document.getElementById('chart-by-class'), {
+            type: 'doughnut',
+            data: {
+                labels: classLabels.map(c => `Class ${c}`),
+                datasets: [{
+                    data: classData,
+                    backgroundColor: classColors.slice(0, classLabels.length),
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { color: textColor, padding: 15 }
+                    }
+                }
+            }
+        });
+        
+        // Assets by Building
+        const buildingCounts = {};
+        assets.forEach(a => {
+            buildingCounts[a.company_code] = (buildingCounts[a.company_code] || 0) + 1;
+        });
+        
+        if (chartByBuilding) chartByBuilding.destroy();
+        chartByBuilding = new Chart(document.getElementById('chart-by-building'), {
+            type: 'pie',
+            data: {
+                labels: Object.keys(buildingCounts),
+                datasets: [{
+                    data: Object.values(buildingCounts),
+                    backgroundColor: ['#00f5ff', '#a855f7', '#10b981'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { color: textColor, padding: 15 }
+                    }
+                }
+            }
+        });
+        
+        // Value by Class
+        const classValues = {};
+        assets.forEach(a => {
+            classValues[a.asset_class] = (classValues[a.asset_class] || 0) + (a.asset_value || 0);
+        });
+        
+        if (chartValueClass) chartValueClass.destroy();
+        chartValueClass = new Chart(document.getElementById('chart-value-class'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(classValues).map(c => `Class ${c}`),
+                datasets: [{
+                    label: 'Value (฿)',
+                    data: Object.values(classValues),
+                    backgroundColor: 'rgba(0,245,255,0.6)',
+                    borderColor: '#00f5ff',
+                    borderWidth: 1,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: { grid: { color: gridColor }, ticks: { color: textColor } },
+                    y: { grid: { color: gridColor }, ticks: { color: textColor, callback: v => '฿' + (v/1000000).toFixed(1) + 'M' } }
+                }
+            }
+        });
+    }
+    
+    // ============================================
+    // ASSETS TABLE
+    // ============================================
+    
+    function renderAssetsTable() {
+        const assets = getAssets();
+        const tbody = document.getElementById('assets-table-body');
+        
+        const search = (document.getElementById('asset-search')?.value || '').toLowerCase();
+        const building = document.getElementById('filter-building')?.value || '';
+        const assetClass = document.getElementById('filter-class')?.value || '';
+        
+        let filtered = assets.filter(a => {
+            const matchSearch = !search || 
+                a.asset_description?.toLowerCase().includes(search) ||
+                a.asset_no?.toLowerCase().includes(search) ||
+                a.code_ref?.toLowerCase().includes(search);
+            const matchBuilding = !building || a.company_code === building;
+            const matchClass = !assetClass || a.asset_class === assetClass;
+            return matchSearch && matchBuilding && matchClass;
+        });
+        
+        if (filtered.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="8" class="text-center py-12">
+                        <div class="w-16 h-16 mx-auto rounded-full bg-cyan-500/10 flex items-center justify-center mb-4">
+                            <i class="fa-solid fa-box-open text-2xl" style="color: var(--accent-cyan);"></i>
+                        </div>
+                        <p style="color: var(--text-secondary);">No assets found</p>
+                    </td>
+                </tr>
+            `;
+        } else {
+            tbody.innerHTML = filtered.map(a => `
+                <tr onclick="showAssetDetail('${a.code_ref || a.asset_no}')" style="cursor: pointer;">
+                    <td class="font-mono text-sm" style="color: var(--accent-cyan);">${a.asset_no}</td>
+                    <td>${a.asset_description || '-'}</td>
+                    <td><span class="badge badge-active">${a.asset_class}</span></td>
+                    <td>${a.company_code}</td>
+                    <td>${a.cost_center}</td>
+                    <td>${a.capitalized_on || '-'}</td>
+                    <td>${a.useful_life} yrs</td>
+                    <td>
+                        <div class="flex gap-2">
+                            <button onclick="event.stopPropagation(); editAsset('${a.__backendId || a.asset_no}')" class="w-8 h-8 rounded flex items-center justify-center" style="background: rgba(0,245,255,0.1); color: var(--accent-cyan);">
+                                <i class="fa-solid fa-pen text-sm"></i>
+                            </button>
+                            <button onclick="event.stopPropagation(); generateQRFor('${a.code_ref}')" class="w-8 h-8 rounded flex items-center justify-center" style="background: rgba(16,185,129,0.1); color: #10b981;">
+                                <i class="fa-solid fa-qrcode text-sm"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        document.getElementById('assets-count').textContent = `${filtered.length} assets`;
+    }
+    
+    function filterAssets() {
+        renderAssetsTable();
+    }
+    
+    // ============================================
+    // ASSET CRUD
+    // ============================================
+    
+    function showAddAssetModal() {
+        document.getElementById('asset-modal-title').textContent = 'Add New Asset';
+        document.getElementById('asset-form').reset();
+        document.getElementById('asset-backend-id').value = '';
+        document.getElementById('asset-capitalized').valueAsDate = new Date();
+        openModal('asset-modal');
+    }
+    
+    function editAsset(id) {
+        const assets = getAssets();
+        const asset = assets.find(a => a.__backendId === id || a.asset_no === id);
+        if (!asset) return;
+        
+        document.getElementById('asset-modal-title').textContent = 'Edit Asset';
+        document.getElementById('asset-backend-id').value = asset.__backendId || '';
+        document.getElementById('asset-class').value = asset.asset_class || '501';
+        document.getElementById('asset-company').value = asset.company_code || 'TH51';
+        document.getElementById('asset-no').value = asset.asset_no || '';
+        document.getElementById('asset-sub').value = asset.sub_number || '0';
+        document.getElementById('asset-desc').value = asset.asset_description || '';
+        document.getElementById('asset-capitalized').value = asset.capitalized_on || '';
+        document.getElementById('asset-life').value = asset.useful_life || 0;
+        document.getElementById('asset-cost-center').value = asset.cost_center || '';
+        document.getElementById('asset-cost-name').value = asset.cost_center_name || '';
+        document.getElementById('asset-value').value = asset.asset_value || 0;
+        document.getElementById('asset-status').value = asset.status || 'active';
+        
+        openModal('asset-modal');
+    }
+    
+    document.getElementById('asset-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const backendId = document.getElementById('asset-backend-id').value;
+        const btn = document.getElementById('save-asset-btn');
+        
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+        
+        const assetClass = document.getElementById('asset-class').value;
+        const companyCode = document.getElementById('asset-company').value;
+        const assetNo = document.getElementById('asset-no').value;
+        const subNumber = document.getElementById('asset-sub').value || '0';
+        const costCenter = document.getElementById('asset-cost-center').value;
+        
+        const codeRef = `${companyCode}|${assetNo}|${subNumber.padStart(4, '0')}||${costCenter}||${assetClass}||`;
+        
+        const assetData = {
+            type: 'asset',
+            asset_class: assetClass,
+            company_code: companyCode,
+            asset_no: assetNo,
+            sub_number: subNumber,
+            capitalized_on: document.getElementById('asset-capitalized').value,
+            cost_center_desc: document.getElementById('asset-cost-name').value,
+            asset_description: document.getElementById('asset-desc').value,
+            useful_life: parseInt(document.getElementById('asset-life').value) || 0,
+            cost_center: costCenter,
+            cost_center_name: document.getElementById('asset-cost-name').value,
+            code_ref: codeRef,
+            asset_value: parseFloat(document.getElementById('asset-value').value) || 0,
+            status: document.getElementById('asset-status').value
+        };
+        
+        if (window.dataSdk) {
+            if (!backendId && allData.length >= 999) {
+                showToast('Data limit reached (999 items)', 'error');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-save"></i> Save Asset';
+                return;
+            }
+            
+            let result;
+            if (backendId) {
+                const existing = allData.find(d => d.__backendId === backendId);
+                if (existing) result = await window.dataSdk.update({ ...existing, ...assetData });
+            } else {
+                result = await window.dataSdk.create(assetData);
+            }
+            
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-save"></i> Save Asset';
+            
+            if (result && result.isOk) {
+                showToast(backendId ? 'Asset updated!' : 'Asset added!', 'success');
+                closeModal('asset-modal');
+            } else {
+                showToast('Error saving asset', 'error');
+            }
+        }
+    });
+    
+    function showAssetDetail(codeRef) {
+        const assets = getAssets();
+        const asset = assets.find(a => a.code_ref === codeRef || a.asset_no === codeRef);
+        if (!asset) return;
+        
+        currentAsset = asset;
+        
+        document.getElementById('detail-content').innerHTML = `
+            <div class="grid grid-cols-2 gap-4">
+                <div class="p-4 rounded-lg" style="background: rgba(0,245,255,0.1);">
+                    <p class="text-sm" style="color: var(--text-secondary);">Asset No.</p>
+                    <p class="font-bold font-mono" style="color: var(--accent-cyan);">${asset.asset_no}</p>
+                </div>
+                <div class="p-4 rounded-lg" style="background: rgba(168,85,247,0.1);">
+                    <p class="text-sm" style="color: var(--text-secondary);">Class</p>
+                    <p class="font-bold text-purple-400">${asset.asset_class}</p>
+                </div>
+            </div>
+            
+            <div class="p-4 rounded-lg border" style="border-color: var(--border-color);">
+                <p class="text-sm mb-1" style="color: var(--text-secondary);">Description</p>
+                <p class="font-semibold" style="color: var(--text-primary);">${asset.asset_description}</p>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <p class="text-sm" style="color: var(--text-secondary);">Company Code</p>
+                    <p style="color: var(--text-primary);">${asset.company_code}</p>
+                </div>
+                <div>
+                    <p class="text-sm" style="color: var(--text-secondary);">Cost Center</p>
+                    <p style="color: var(--text-primary);">${asset.cost_center}</p>
+                </div>
+                <div>
+                    <p class="text-sm" style="color: var(--text-secondary);">Capitalized On</p>
+                    <p style="color: var(--text-primary);">${asset.capitalized_on}</p>
+                </div>
+                <div>
+                    <p class="text-sm" style="color: var(--text-secondary);">Useful Life</p>
+                    <p style="color: var(--text-primary);">${asset.useful_life} years</p>
+                </div>
+                <div>
+                    <p class="text-sm" style="color: var(--text-secondary);">Value</p>
+                    <p class="font-bold text-green-400">฿${(asset.asset_value || 0).toLocaleString()}</p>
+                </div>
+                <div>
+                    <p class="text-sm" style="color: var(--text-secondary);">Status</p>
+                    <span class="badge ${asset.status === 'active' ? 'badge-active' : 'badge-inactive'}">${asset.status}</span>
+                </div>
+            </div>
+            
+            <div class="p-4 rounded-lg" style="background: rgba(0,0,0,0.3);">
+                <p class="text-sm mb-1" style="color: var(--text-secondary);">Code Reference</p>
+                <p class="font-mono text-sm break-all" style="color: var(--accent-cyan);">${asset.code_ref}</p>
+            </div>
+        `;
+        
+        openModal('detail-modal');
+    }
+    
+    function editCurrentAsset() {
+        if (currentAsset) {
+            closeModal('detail-modal');
+            editAsset(currentAsset.__backendId || currentAsset.asset_no);
+        }
+    }
+    
+    function generateQRForCurrent() {
+        if (currentAsset) {
+            closeModal('detail-modal');
+            showPage('qrcode');
+            document.getElementById('qr-custom').value = currentAsset.code_ref;
+            generateCustomQR();
+        }
+    }
+    
+    // ============================================
+    // ANNUAL RECORD
+    // ============================================
+    
+    function lookupAsset() {
+        const assetNo = document.getElementById('manual-asset-no').value.trim();
+        if (!assetNo) {
+            showToast('Please enter Asset No.', 'error');
+            return;
+        }
+        
+        const assets = getAssets();
+        const asset = assets.find(a => 
+            a.code_ref === assetNo || 
+            a.asset_no === assetNo ||
+            a.code_ref?.includes(assetNo)
+        );
+        
+        if (asset) {
+            currentAsset = asset;
+            document.getElementById('scanned-asset-info').classList.remove('hidden');
+            document.getElementById('scanned-asset-no').textContent = asset.code_ref || asset.asset_no;
+            document.getElementById('scanned-desc').textContent = asset.asset_description;
+            document.getElementById('scanned-company').textContent = asset.company_code;
+            document.getElementById('scanned-cost-center').textContent = asset.cost_center_name;
+            showToast('Asset found!', 'success');
+        } else {
+            showToast('Asset not found', 'error');
+        }
+    }
+    
+    function initSignaturePad() {
+        signatureCanvas = document.getElementById('signature-pad');
+        if (!signatureCanvas) return;
+        
+        signatureCtx = signatureCanvas.getContext('2d');
+        signatureCanvas.width = signatureCanvas.offsetWidth;
+        signatureCanvas.height = 120;
+        
+        signatureCanvas.addEventListener('mousedown', startDrawing);
+        signatureCanvas.addEventListener('mousemove', draw);
+        signatureCanvas.addEventListener('mouseup', stopDrawing);
+        signatureCanvas.addEventListener('mouseout', stopDrawing);
+        
+        signatureCanvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            startDrawing(e.touches[0]);
+        });
+        signatureCanvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            draw(e.touches[0]);
+        });
+        signatureCanvas.addEventListener('touchend', stopDrawing);
+    }
+    
+    function startDrawing(e) {
+        isDrawing = true;
+        signatureCtx.beginPath();
+        signatureCtx.moveTo(e.offsetX || e.clientX - signatureCanvas.getBoundingClientRect().left, 
+                           e.offsetY || e.clientY - signatureCanvas.getBoundingClientRect().top);
+    }
+    
+    function draw(e) {
+        if (!isDrawing) return;
+        signatureCtx.lineTo(e.offsetX || e.clientX - signatureCanvas.getBoundingClientRect().left, 
+                           e.offsetY || e.clientY - signatureCanvas.getBoundingClientRect().top);
+        signatureCtx.strokeStyle = '#000';
+        signatureCtx.lineWidth = 2;
+        signatureCtx.stroke();
+    }
+    
+    function stopDrawing() {
+        isDrawing = false;
+    }
+    
+    function clearSignature() {
+        signatureCtx.clearRect(0, 0, signatureCanvas.width, signatureCanvas.height);
+    }
+    
+    function clearRecordForm() {
+        document.getElementById('record-form').reset();
+        document.getElementById('scanned-asset-info').classList.add('hidden');
+        clearSignature();
+        currentAsset = null;
+    }
+    
+    document.getElementById('record-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        if (!currentAsset) {
+            showToast('Please scan or lookup an asset first', 'error');
+            return;
+        }
+        
+        const btn = document.getElementById('submit-record-btn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+        
+        const recordData = {
+            type: 'record',
+            code_ref: currentAsset.code_ref || currentAsset.asset_no,
+            asset_no: currentAsset.asset_no,
+            building: document.getElementById('rec-building').value,
+            main_area_ref: document.getElementById('rec-main-area').value,
+            room_name: document.getElementById('rec-room-name').value,
+            main_area: document.getElementById('rec-main-area').value,
+            type_area: document.getElementById('rec-type-area').value,
+            floor: document.getElementById('rec-floor').value,
+            add_detail: document.getElementById('rec-detail').value,
+            amount: parseInt(document.getElementById('rec-amount').value) || 1,
+            user_name: document.getElementById('rec-user-name').value,
+            staff_record_name: document.getElementById('rec-staff-name').value,
+            tel_no: document.getElementById('rec-tel').value,
+            record_date: new Date().toISOString(),
+            status: 'completed'
+        };
+        
+        if (window.dataSdk) {
+            if (allData.length >= 999) {
+                showToast('Data limit reached', 'error');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-save"></i> Save Record';
+                return;
+            }
+            
+            const result = await window.dataSdk.create(recordData);
+            
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-save"></i> Save Record';
+            
+            if (result.isOk) {
+                showToast('Record saved successfully!', 'success');
+                clearRecordForm();
+            } else {
+                showToast('Error saving record', 'error');
+            }
+        }
+    });
+    
+    function renderRecordsTable() {
+        const records = getRecords();
+        const tbody = document.getElementById('records-table-body');
+        
+        if (records.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8" style="color: var(--text-secondary);">No records yet</td></tr>`;
+            return;
+        }
+        
+        tbody.innerHTML = records.slice(0, 20).map(r => `
+            <tr>
+                <td>${new Date(r.record_date).toLocaleDateString('th-TH')}</td>
+                <td class="font-mono text-sm" style="color: var(--accent-cyan);">${r.asset_no}</td>
+                <td>${r.building}</td>
+                <td>${r.room_name || '-'}</td>
+                <td>${r.staff_record_name}</td>
+                <td><span class="badge badge-active">${r.status}</span></td>
+            </tr>
+        `).join('');
+    }
+    
+    // ============================================
+    // QR CODE
+    // ============================================
+    
+    function populateQRSelect() {
+        const assets = getAssets();
+        const select = document.getElementById('qr-asset-select');
+        
+        select.innerHTML = '<option value="">-- Select Asset --</option>' +
+            assets.map(a => `<option value="${a.code_ref}">${a.asset_no} - ${a.asset_description}</option>`).join('');
+    }
+    
+    function generateQR() {
+        const codeRef = document.getElementById('qr-asset-select').value;
+        if (codeRef) {
+            generateQRCode(codeRef);
+        }
+    }
+    
+    function generateCustomQR() {
+        const codeRef = document.getElementById('qr-custom').value.trim();
+        if (codeRef) {
+            generateQRCode(codeRef);
+        }
+    }
+    
+    function generateQRFor(codeRef) {
+        showPage('qrcode');
+        document.getElementById('qr-custom').value = codeRef;
+        generateQRCode(codeRef);
+    }
+    
+    function generateQRCode(text) {
+        const canvas = document.getElementById('qr-canvas');
+        
+        QRCode.toCanvas(canvas, text, {
+            width: 200,
+            margin: 2,
+            color: { dark: '#000000', light: '#ffffff' }
+        }, function(error) {
+            if (error) {
+                showToast('Error generating QR code', 'error');
+                return;
+            }
+            
+            document.getElementById('qr-code-text').textContent = text;
+            document.getElementById('download-qr-btn').disabled = false;
+            document.getElementById('print-qr-btn').disabled = false;
+        });
+    }
+    
+    function downloadQR() {
+        const canvas = document.getElementById('qr-canvas');
+        const link = document.createElement('a');
+        link.download = 'asset-qrcode.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        showToast('QR Code downloaded!', 'success');
+    }
+    
+    function printQR() {
+        const canvas = document.getElementById('qr-canvas');
+        const dataUrl = canvas.toDataURL('image/png');
+        const text = document.getElementById('qr-code-text').textContent;
+        
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <html>
+            <head><title>Print QR Code</title></head>
+            <body style="text-align: center; padding: 20px;">
+                <img src="${dataUrl}" style="width: 200px; height: 200px;">
+                <p style="font-family: monospace; font-size: 10px; word-break: break-all; max-width: 300px; margin: 10px auto;">${text}</p>
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
+    }
+    
+    function generateAllQR() {
+        const assets = getAssets();
+        const grid = document.getElementById('batch-qr-grid');
+        
+        grid.innerHTML = '';
+        
+        assets.forEach((asset, i) => {
+            const div = document.createElement('div');
+            div.className = 'text-center p-3 rounded-lg border';
+            div.style.background = 'rgba(0,0,0,0.3)';
+            div.style.borderColor = 'var(--border-color)';
+            
+            const canvasId = `batch-qr-${i}`;
+            div.innerHTML = `
+                <div class="qr-container inline-block mb-2">
+                    <canvas id="${canvasId}"></canvas>
+                </div>
+                <p class="text-xs truncate" style="color: var(--text-secondary);">${asset.asset_no}</p>
+            `;
+            
+            grid.appendChild(div);
+            
+            setTimeout(() => {
+                QRCode.toCanvas(document.getElementById(canvasId), asset.code_ref, {
+                    width: 100,
+                    margin: 1
+                });
+            }, i * 50);
+        });
+        
+        document.getElementById('download-all-btn').disabled = false;
+        showToast(`Generated ${assets.length} QR codes!`, 'success');
+    }
+    
+    function downloadAllQR() {
+        showToast('ZIP download feature coming soon!', 'info');
+    }
+    
+    // ============================================
+    // SEARCH
+    // ============================================
+    
+    function performSearch() {
+        const query = document.getElementById('global-search').value.toLowerCase().trim();
+        const container = document.getElementById('search-results');
+        
+        if (!query) {
+            container.innerHTML = `
+                <div class="col-span-full text-center py-12">
+                    <div class="w-24 h-24 mx-auto rounded-full bg-cyan-500/10 flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-search text-4xl" style="color: var(--accent-cyan);"></i>
+                    </div>
+                    <h3 class="text-xl mb-2" style="color: var(--text-primary);">Search for Assets</h3>
+                    <p style="color: var(--text-secondary);">Enter keywords to search</p>
+                </div>
+            `;
+            return;
+        }
+        
+        const assets = getAssets();
+        const results = assets.filter(a => 
+            a.asset_no?.toLowerCase().includes(query) ||
+            a.asset_description?.toLowerCase().includes(query) ||
+            a.code_ref?.toLowerCase().includes(query) ||
+            a.cost_center?.toLowerCase().includes(query) ||
+            a.cost_center_name?.toLowerCase().includes(query)
+        );
+        
+        if (results.length === 0) {
+            container.innerHTML = `
+                <div class="col-span-full text-center py-12">
+                    <div class="w-20 h-20 mx-auto rounded-full bg-red-500/10 flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-times text-3xl text-red-400"></i>
+                    </div>
+                    <h3 class="text-xl mb-2" style="color: var(--text-primary);">No Results Found</h3>
+                    <p style="color: var(--text-secondary);">Try different keywords</p>
+                </div>
+            `;
+            return;
+        }
+        
+        container.innerHTML = results.map(a => `
+            <div class="asset-card cursor-pointer" onclick="showAssetDetail('${a.code_ref || a.asset_no}')">
+                <div class="flex items-start justify-between mb-3">
+                    <span class="badge badge-active">${a.asset_class}</span>
+                    <span class="text-xs" style="color: var(--text-secondary);">${a.company_code}</span>
+                </div>
+                <h4 class="font-bold mb-2" style="color: var(--text-primary);">${a.asset_description}</h4>
+                <p class="font-mono text-sm mb-2" style="color: var(--accent-cyan);">${a.asset_no}</p>
+                <p class="text-sm" style="color: var(--text-secondary);">${a.cost_center_name}</p>
+                <div class="flex items-center justify-between mt-3 pt-3 border-t" style="border-color: var(--border-color);">
+                    <span class="text-sm font-bold text-green-400">฿${(a.asset_value || 0).toLocaleString()}</span>
+                    <button onclick="event.stopPropagation(); generateQRFor('${a.code_ref}')" class="text-sm" style="color: var(--accent-cyan);">
+                        <i class="fa-solid fa-qrcode"></i> QR
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    // ============================================
+    // IMPORT / EXPORT
+    // ============================================
+    
+    function initDragDrop() {
+        const dropZone = document.getElementById('drop-zone');
+        if (!dropZone) return;
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            });
+        });
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'));
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'));
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+    }
+    
+    function handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (file) handleFile(file);
+    }
+    
+    function handleFile(file) {
+        if (!file.name.match(/\.(xlsx|xls)$/i)) {
+            showToast('Please select an Excel file', 'error');
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const sheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[sheetName];
+                const jsonData = XLSX.utils.sheet_to_json(worksheet);
+                
+                pendingImportData = jsonData;
+                
+                document.getElementById('file-name').textContent = file.name;
+                document.getElementById('row-count').textContent = jsonData.length;
+                document.getElementById('import-preview').classList.remove('hidden');
+                
+                showToast(`Found ${jsonData.length} rows`, 'success');
+            } catch (error) {
+                showToast('Error reading file', 'error');
+            }
+        };
+        reader.readAsArrayBuffer(file);
+    }
+    
+    async function importData() {
+        if (!pendingImportData || pendingImportData.length === 0) {
+            showToast('No data to import', 'error');
+            return;
+        }
+        
+        const btn = document.getElementById('import-btn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Importing...';
+        
+        let imported = 0;
+        
+        for (const row of pendingImportData) {
+            if (allData.length >= 999) {
+                showToast(`Imported ${imported} items. Limit reached.`, 'warning');
+                break;
+            }
+            
+            const assetClass = row['Asset Class'] || row['asset_class'] || '';
+            const companyCode = row['Company Code'] || row['company_code'] || '';
+            const assetNo = row['Asset'] || row['asset_no'] || '';
+            const subNumber = row['Sub-number'] || row['sub_number'] || '0';
+            const costCenter = row['Cost Center'] || row['cost_center'] || '';
+            
+            const codeRef = `${companyCode}|${assetNo}|${String(subNumber).padStart(4, '0')}||${costCenter}||${assetClass}||`;
+            
+            const assetData = {
+                type: 'asset',
+                asset_class: assetClass,
+                company_code: companyCode,
+                asset_no: assetNo,
+                sub_number: String(subNumber),
+                capitalized_on: row['Capitalized On'] || row['capitalized_on'] || '',
+                cost_center_desc: row['Cost Center Description'] || row['cost_center_desc'] || '',
+                asset_description: row['Asset Description'] || row['asset_description'] || '',
+                useful_life: parseInt(row['Useful Life'] || row['useful_life']) || 0,
+                cost_center: costCenter,
+                cost_center_name: row['Cost Center Name'] || row['cost_center_name'] || '',
+                code_ref: row['Code ref'] || row['code_ref'] || codeRef,
+                asset_value: parseFloat(row['Asset Value'] || row['asset_value']) || 0,
+                status: 'active'
+            };
+            
+            if (window.dataSdk) {
+                const result = await window.dataSdk.create(assetData);
+                if (result.isOk) imported++;
+            }
+        }
+        
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-upload"></i> Import Data';
+        
+        showToast(`Successfully imported ${imported} assets!`, 'success');
+        pendingImportData = null;
+        document.getElementById('import-preview').classList.add('hidden');
+    }
+    
+    function exportAssets() {
+        const assets = getAssets();
+        
+        const exportData = assets.map(a => ({
+            'Asset Class': a.asset_class,
+            'Company Code': a.company_code,
+            'Asset': a.asset_no,
+            'Sub-number': a.sub_number,
+            'Capitalized On': a.capitalized_on,
+            'Cost Center Description': a.cost_center_desc,
+            'Asset Description': a.asset_description,
+            'Useful Life': a.useful_life,
+            'Cost Center': a.cost_center,
+            'Cost Center Name': a.cost_center_name,
+            'Code ref': a.code_ref,
+            'Asset Value': a.asset_value,
+            'Status': a.status
+        }));
+        
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Assets');
+        
+        XLSX.writeFile(wb, `assets_export_${new Date().toISOString().split('T')[0]}.xlsx`);
+        showToast('Assets exported successfully!', 'success');
+    }
+    
+    function exportRecords() {
+        const records = getRecords();
+        
+        if (records.length === 0) {
+            showToast('No records to export', 'error');
+            return;
+        }
+        
+        const exportData = records.map(r => ({
+            'Asset No.': r.code_ref || r.asset_no,
+            'Building': r.building,
+            'Main Area Ref': r.main_area_ref,
+            'Room Name': r.room_name,
+            'Main Area': r.main_area,
+            'Type Area': r.type_area,
+            'Floor': r.floor,
+            'Additional Detail': r.add_detail,
+            'Amount': r.amount,
+            'User Name': r.user_name,
+            'Staff Record Name': r.staff_record_name,
+            'Tel No.': r.tel_no,
+            'Record Date': r.record_date
+        }));
+        
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Records');
+        
+        XLSX.writeFile(wb, `asset_records_${new Date().toISOString().split('T')[0]}.xlsx`);
+        showToast('Records exported successfully!', 'success');
+    }
+    
+    function downloadTemplate() {
+        const templateData = [
+            {
+                'Asset Class': '502',
+                'Company Code': 'TH51',
+                'Asset': '5020000001',
+                'Sub-number': '0',
+                'Capitalized On': '2024-01-01',
+                'Cost Center Description': 'Engineering',
+                'Asset Description': 'Sample Equipment',
+                'Useful Life': 10,
+                'Cost Center': '51102009',
+                'Cost Center Name': 'Engineering Dept',
+                'Asset Value': 100000
+            }
+        ];
+        
+        const ws = XLSX.utils.json_to_sheet(templateData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Template');
+        
+        XLSX.writeFile(wb, 'asset_import_template.xlsx');
+        showToast('Template downloaded!', 'success');
+    }
+    
+    // ============================================
+    // MODALS & TOAST
+    // ============================================
+    
+    function openModal(id) {
+        document.getElementById(id).classList.remove('hidden');
+        document.getElementById(id).classList.add('flex');
+    }
+    
+    function closeModal(id) {
+        document.getElementById(id).classList.add('hidden');
+        document.getElementById(id).classList.remove('flex');
+    }
+    
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        const icon = document.getElementById('toast-icon');
+        const msg = document.getElementById('toast-message');
+        
+        const icons = {
+            success: 'fa-check-circle text-green-400',
+            error: 'fa-times-circle text-red-400',
+            warning: 'fa-exclamation-triangle text-yellow-400',
+            info: 'fa-info-circle text-blue-400'
+        };
+        
+        icon.className = `fa-solid ${icons[type]} text-xl`;
+        msg.textContent = message;
+        toast.classList.remove('hidden');
+        
+        setTimeout(() => toast.classList.add('hidden'), 3000);
+    }
+    
+    // ============================================
+    // INITIALIZE
+    // ============================================
+    
+    initApp();
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b7fcee5b7977b46',t:'MTc2NzQxNTEyMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
